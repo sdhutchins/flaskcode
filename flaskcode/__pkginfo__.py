@@ -2,7 +2,7 @@
 
 title = 'flaskcode'
 
-version_info = (0, 0, 8)
+version_info = (0, 0, 9)
 version = '.'.join(map(str, version_info))
 
 license = 'MIT'
