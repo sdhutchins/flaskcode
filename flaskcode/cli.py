@@ -15,7 +15,7 @@ variables of the form FLASKCODE_*. For example FLASKCODE_USERNAME.
 """.format(app_title=default_config.FLASKCODE_APP_TITLE)
 
 
-themes = ['vs', 'vs-dark', 'hc-black', 'hc-light']
+themes = ['vs', 'vs-dark', 'hc-black', 'hc-light', 'github-dark', 'dracula', 'nord', 'github-light', 'solarized-light', 'night-owl-light']
 
 
 def add_auth(blueprint, username, password, realm=default_config.FLASKCODE_APP_TITLE):
@@ -33,6 +33,9 @@ def create_flask_app(username=None, password=None):
     app = Flask(__name__)
     app.url_map.strict_slashes = False
     app.config.from_object(default_config)
+    # Set secret key for sessions if not already configured
+    if not app.config.get('SECRET_KEY'):
+        app.config['SECRET_KEY'] = os.urandom(24).hex()
     if username:
         add_auth(blueprint, username, password)
     app.register_blueprint(blueprint)
@@ -45,7 +48,7 @@ def create_flask_app(username=None, password=None):
 @click.option('-p', '--port', default=5001, type=int, help='Port on which to bind HTTP server.')
 @click.option('--username', default=None, help='HTTP Basic Auth username.')
 @click.option('--password', default=None, help='HTTP Basic Auth password.')
-@click.option('--editor-theme', default='vs-dark', type=click.Choice(themes), help='Editor theme, default is vs-dark.')
+@click.option('--editor-theme', default=default_config.FLASKCODE_EDITOR_THEME, type=click.Choice(themes), help='Editor theme, default is {}.'.format(default_config.FLASKCODE_EDITOR_THEME))
 @click.option('--debug', default=False, is_flag=True, help='Run in flask DEBUG mode.')
 @click.option('--env', default='development', help='Flask environment, default is development.')
 @click.version_option(version=__version__, prog_name=__title__)

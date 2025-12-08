@@ -1,4 +1,15 @@
 /** flaskcode styles **/
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -107,6 +118,18 @@ body {
 #editor-header {
     height: 38px;
     background-color: #dddddd;
+    padding: 0;
+    margin: 0;
+    border: none;
+    position: relative;
+}
+
+.editor-header-content {
+    display: flex;
+    align-items: flex-end;
+    height: 100%;
+    width: 100%;
+    position: relative;
 }
 
 #editor-container {
@@ -259,4 +282,182 @@ div.editor-container.light-theme .editor-preloader .loading-center-absolute {
     border-radius: 0;
     padding-top: 8px;
     padding-bottom: 8px;
+}
+
+/* Save notification pill */
+.save-notification-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: normal;
+    vertical-align: middle;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: 8px;
+    line-height: 1.2;
+}
+
+/* Editor tabs */
+.editor-tabs {
+    margin-bottom: 0;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    gap: 0;
+}
+
+.editor-tabs .nav-tabs {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 0;
+    border-top: none;
+    padding-left: 0;
+    padding-right: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex: 1;
+    min-width: 0;
+}
+
+.editor-tabs .nav-tabs::-webkit-scrollbar {
+    height: 0;
+    display: none;
+}
+
+.editor-tabs .nav-tabs > li {
+    margin-bottom: -1px;
+}
+
+.editor-tabs .nav-tabs > li > a {
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    border-radius: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    max-width: 200px;
+    overflow: hidden;
+    position: relative;
+    padding-right: 25px;
+    margin-right: 2px;
+    background-color: #e8e8e8;
+    color: #555;
+}
+
+.editor-tabs .nav-tabs > li > a > span:first-child:not(.save-notification-pill):not(.tab-close) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+}
+
+.editor-tabs .nav-tabs > li > a:hover {
+    background-color: #d0d0d0;
+}
+
+.editor-tabs .nav-tabs > li.active > a {
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+    cursor: default;
+    margin-bottom: -1px;
+    z-index: 1;
+    position: relative;
+}
+
+.editor-tabs .nav-tabs > li.active > a:hover {
+    background-color: #fff;
+    border-color: #ddd #ddd transparent;
+    border-bottom-color: transparent;
+}
+
+.editor-tabs .tab-close {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0 4px;
+    margin-left: 5px;
+    color: #999;
+    font-size: 14px;
+    line-height: 1;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+}
+
+.editor-tabs .tab-close:hover {
+    color: #d9534f;
+    background-color: rgba(217, 83, 79, 0.1);
+    box-shadow: 0 2px 4px rgba(217, 83, 79, 0.3);
+}
+
+.editor-tabs .tab-modified {
+    font-weight: bold;
+}
+
+.editor-tabs .tab-modified::before {
+    content: '● ';
+    color: #d9534f;
+    font-size: 10px;
+    vertical-align: middle;
+}
+
+#editor-toolbar {
+    padding: 0 10px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    background-color: #dddddd;
+}
+
+#editor-toolbar #header-action-group {
+    line-height: 38px;
+    margin: 0;
+}
+
+/* New file button */
+.new-file-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    margin: 0;
+    margin-left: 2px;
+    margin-bottom: -1px;
+    padding: 0;
+    border: 1px solid transparent;
+    background-color: #e8e8e8;
+    color: #555;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    align-self: flex-end;
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+.new-file-btn i {
+    pointer-events: none;
+}
+
+.new-file-btn:hover {
+    background-color: #d0d0d0;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.new-file-btn:active {
+    background-color: #b8b8b8;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }

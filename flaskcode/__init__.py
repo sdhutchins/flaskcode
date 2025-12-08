@@ -1,7 +1,7 @@
 """flaskcode Flask Blueprint"""
 import os
 
-from flask import Blueprint, current_app, g, abort
+from flask import Blueprint, current_app, g, abort, session
 
 from . import default_config
 from ._version import __version__
@@ -37,10 +37,17 @@ def manipulate_url_values(endpoint, values):
 
 @blueprint.context_processor
 def process_template_context():
+    editor_theme = session.get('flaskcode_editor_theme') or current_app.config.get(
+        'FLASKCODE_EDITOR_THEME', default_config.FLASKCODE_EDITOR_THEME
+    )
+    font_size = session.get('flaskcode_font_size') or current_app.config.get(
+        'FLASKCODE_EDITOR_FONT_SIZE', default_config.FLASKCODE_EDITOR_FONT_SIZE
+    )
     return dict(
         app_version=__version__,
         app_title=current_app.config.get('FLASKCODE_APP_TITLE', default_config.FLASKCODE_APP_TITLE),
-        editor_theme=current_app.config.get('FLASKCODE_EDITOR_THEME', default_config.FLASKCODE_EDITOR_THEME),
+        editor_theme=editor_theme,
+        font_size=font_size,
     )
 
 

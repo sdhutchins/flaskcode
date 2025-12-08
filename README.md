@@ -4,7 +4,7 @@
 [![PyPI Version](https://img.shields.io/pypi/v/flaskcode.svg)](https://pypi.org/project/flaskcode)
 [![MIT License](https://img.shields.io/github/license/sujeetkv/flaskcode.svg)](https://github.com/sujeetkv/flaskcode/blob/master/LICENSE)
 
-Web based code editor on python flask framework.
+Web based code editor using Python's Flask framework.
 
 ![screenshot](https://user-images.githubusercontent.com/17122995/92307134-bc8f9e00-efb1-11ea-93c3-49aa6c52cca3.png)
 
@@ -13,6 +13,12 @@ Web based code editor on python flask framework.
 
 ```bash
 pip install flaskcode
+```
+
+Or install directly from GitHub:
+
+```bash
+pip install git+https://github.com/sujeetkv/flaskcode.git
 ```
 
 

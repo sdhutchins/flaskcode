@@ -1,6 +1,6 @@
 """flaskcode module setup"""
 import os
-from setuptools import setup
+from setuptools import setup 
 
 
 BASEDIR = os.path.dirname(__file__)

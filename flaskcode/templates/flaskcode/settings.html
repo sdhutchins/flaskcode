@@ -1,0 +1,90 @@
+{% extends 'flaskcode/_base.html' %}
+
+{% block page_title %}{{ app_title }} - Settings{% endblock %}
+
+{% block page_styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('flaskcode.static', filename='vendor/font-awesome/css/font-awesome.min.css') }}" />
+<style>
+    #page-footer {
+        display: none;
+    }
+    body {
+        overflow: auto;
+        height: auto;
+    }
+    #page-wrapper {
+        padding-top: 20px;
+        height: auto;
+    }
+    #page-container {
+        padding-top: 0;
+    }
+</style>
+{% endblock %}
+
+{% block page_content %}
+<div class="row" style="margin-top: 20px;">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-cog" aria-hidden="true"></i> Settings</h3>
+            </div>
+            <div class="panel-body">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="{{ url_for('flaskcode.settings') }}">
+                    <div class="form-group">
+                        <label for="editor_theme">Editor Theme</label>
+                        <select class="form-control" id="editor_theme" name="editor_theme">
+                            {% for theme in available_themes %}
+                                <option value="{{ theme }}" {% if theme == current_theme %}selected{% endif %}>
+                                    {{ theme }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <small class="form-text text-muted">
+                            Choose your preferred editor color theme. Changes will take effect after saving.
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="font_size">Font Size</label>
+                        <div class="row">
+                            <div class="col-xs-8">
+                                <input type="range" class="form-control" id="font_size" name="font_size" 
+                                       min="{{ min_font_size }}" max="{{ max_font_size }}" 
+                                       value="{{ current_font_size }}" 
+                                       oninput="document.getElementById('font_size_display').textContent = this.value + 'px'">
+                            </div>
+                            <div class="col-xs-4">
+                                <span id="font_size_display" class="form-control-static" style="font-size: 16px; padding-top: 7px;">
+                                    {{ current_font_size }}px
+                                </span>
+                            </div>
+                        </div>
+                        <small class="form-text text-muted">
+                            Adjust the editor font size ({{ min_font_size }}px - {{ max_font_size }}px). Changes will take effect after saving.
+                        </small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-save" aria-hidden="true"></i> Save Settings
+                    </button>
+                    <a href="{{ url_for('flaskcode.index') }}" class="btn btn-default">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Editor
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
