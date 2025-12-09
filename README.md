@@ -6,21 +6,17 @@
 
 Web based code editor using Python's Flask framework.
 
-![screenshot](https://user-images.githubusercontent.com/17122995/92307134-bc8f9e00-efb1-11ea-93c3-49aa6c52cca3.png)
+> **Note:** This is a fork of [sujeetkv/flaskcode](https://github.com/sujeetkv/flaskcode) with additional features and enhancements.
 
+![screenshot](https://user-images.githubusercontent.com/17122995/92307134-bc8f9e00-efb1-11ea-93c3-49aa6c52cca3.png)
 
 ## Installation
 
-```bash
-pip install flaskcode
-```
-
-Or install directly from GitHub:
+Install directly from GitHub (dev branch):
 
 ```bash
-pip install git+https://github.com/sujeetkv/flaskcode.git
+pip install git+https://github.com/sdhutchins/flaskcode.git@dev
 ```
-
 
 ## Run application from CLI
 
@@ -36,7 +32,7 @@ Get help for CLI command:
 flaskcode --help
 ```
 
-```
+```console
 Usage: flaskcode [OPTIONS] [RESOURCE_BASEPATH]
 
   Run FlaskCode with given RESOURCE_BASEPATH or current working directory.
@@ -56,7 +52,6 @@ Options:
   --version                       Show the version and exit.
   --help                          Show this message and exit.
 ```
-
 
 ## Integrating flaskcode in your Flask app
 
@@ -79,19 +74,16 @@ if __name__ == '__main__':
     app.run()
 ```
 
-Now if you run the Flask app on default port, you can access the flaskcode at http://127.0.0.1:5000/flaskcode.
-
+Now if you run the Flask app on default port, you can access the flaskcode at <http://127.0.0.1:5000/flaskcode>.
 
 ## Built with
 
 * [Flask](http://flask.pocoo.org) - a python web framework
 * [Monaco Editor](https://microsoft.github.io/monaco-editor) - a browser based code editor
 
-
 ## Authors
 
 * [**Sujeet Kumar**](https://github.com/sujeetkv)
-
 
 ## License
 
