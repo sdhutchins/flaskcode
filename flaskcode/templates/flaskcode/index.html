@@ -76,6 +76,60 @@
             </div>
         </div>
     </div>
+    
+    <div id="settingsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <form id="settingsForm" method="post">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="settingsModalLabel"><i class="fa fa-cog" aria-hidden="true"></i> Settings</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="settings-messages"></div>
+                        <div class="form-group">
+                            <label for="settings_editor_theme">Editor Theme</label>
+                            <select class="form-control" id="settings_editor_theme" name="editor_theme">
+                                {% for theme in available_themes %}
+                                    <option value="{{ theme }}" {% if theme == editor_theme %}selected{% endif %}>
+                                        {{ theme }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <small class="form-text text-muted">
+                                Choose your preferred editor color theme. Changes will take effect after saving.
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="settings_font_size">Font Size</label>
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <input type="range" class="form-control" id="settings_font_size" name="font_size" 
+                                           min="10" max="40" 
+                                           value="{{ font_size }}" 
+                                           oninput="document.getElementById('settings_font_size_display').textContent = this.value + 'px'">
+                                </div>
+                                <div class="col-xs-4">
+                                    <span id="settings_font_size_display" class="form-control-static" style="font-size: 16px; padding-top: 7px;">
+                                        {{ font_size }}px
+                                    </span>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">
+                                Adjust the editor font size (10px - 40px). Changes will take effect after saving.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" data-loading-text="Saving...">
+                            <i class="fa fa-save" aria-hidden="true"></i> Save Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <!--/Modals-->
 
     <div id="page-row" class="row">
@@ -143,6 +197,7 @@
 flaskcode.config.set('pluginsBaseUrl', "{{ url_for('flaskcode.static', filename='vendor') }}");
 flaskcode.config.set('updateResourceBaseUrl', "{{ url_for('flaskcode.update_resource_data', file_path='') }}");
 flaskcode.config.set('resourceUrlTemplate', "{{ url_for('flaskcode.resource_data', file_path='__pathname__') }}");
+flaskcode.config.set('settingsUrl', "{{ url_for('flaskcode.settings') }}");
 flaskcode.config.set('editorTheme', "{{ editor_theme }}");
 flaskcode.config.set('fontSize', parseInt("{{ font_size }}", 10) || 13);
 </script>

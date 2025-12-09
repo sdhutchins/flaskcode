@@ -9,9 +9,29 @@ from . import blueprint
 
 @blueprint.route('/')
 def index():
+    from flask import current_app
+    from . import default_config
+    
     dirname = os.path.basename(g.flaskcode_resource_basepath)
     dtree = dir_tree(g.flaskcode_resource_basepath, g.flaskcode_resource_basepath + '/')
-    return render_template('flaskcode/index.html', dirname=dirname, dtree=dtree)
+    
+    # Get current settings for the modal
+    available_themes = ['vs', 'vs-dark', 'hc-black', 'hc-light', 'github-dark', 'dracula', 'nord', 'github-light', 'solarized-light', 'night-owl-light']
+    current_theme = session.get('flaskcode_editor_theme') or current_app.config.get(
+        'FLASKCODE_EDITOR_THEME', default_config.FLASKCODE_EDITOR_THEME
+    )
+    current_font_size = session.get('flaskcode_font_size') or current_app.config.get(
+        'FLASKCODE_EDITOR_FONT_SIZE', default_config.FLASKCODE_EDITOR_FONT_SIZE
+    )
+    
+    return render_template(
+        'flaskcode/index.html',
+        dirname=dirname,
+        dtree=dtree,
+        available_themes=available_themes,
+        editor_theme=current_theme,
+        font_size=current_font_size
+    )
 
 
 @blueprint.route('/resource-data/<path:file_path>.txt', methods=['GET', 'HEAD'])
@@ -95,6 +115,9 @@ def settings():
     default_font_size = 13
     
     if request.method == 'POST':
+        # Check if this is an AJAX request
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.is_json
+        
         editor_theme = request.form.get('editor_theme', default_config.FLASKCODE_EDITOR_THEME)
         font_size = request.form.get('font_size', default_font_size)
         
@@ -113,13 +136,27 @@ def settings():
         except (ValueError, TypeError):
             errors.append('Invalid font size value.')
         
-        if errors:
-            for error in errors:
-                flash(error, 'error')
+        if is_ajax:
+            # Return JSON response for AJAX requests
+            if errors:
+                return jsonify({'success': False, 'message': '; '.join(errors), 'errors': errors})
+            else:
+                return jsonify({
+                    'success': True,
+                    'message': 'Settings saved successfully!',
+                    'theme': editor_theme,
+                    'font_size': font_size
+                })
         else:
-            flash('Settings saved successfully!', 'success')
-            return redirect(url_for('flaskcode.index', theme_updated='1'))
+            # Handle regular form submission (backward compatibility)
+            if errors:
+                for error in errors:
+                    flash(error, 'error')
+            else:
+                flash('Settings saved successfully!', 'success')
+                return redirect(url_for('flaskcode.index', theme_updated='1'))
     
+    # GET request - render settings page (for backward compatibility)
     current_theme = session.get('flaskcode_editor_theme') or current_app.config.get(
         'FLASKCODE_EDITOR_THEME', default_config.FLASKCODE_EDITOR_THEME
     )

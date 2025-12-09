@@ -387,6 +387,100 @@ $(function () {
             $('#renameFileModal').on('shown.bs.modal', function () {
                 $(this).find('#rename_filename').focus().select();
             });
+            
+            // Settings modal handlers
+            $('#open-settings-modal').on('click', function(e) {
+                e.preventDefault();
+                $('#settingsModal').modal('show');
+            });
+            
+            $('#settingsModal').on('shown.bs.modal', function () {
+                $(this).find('#settings_editor_theme').focus();
+            });
+            
+            $('form#settingsForm').on('submit', function (evt) {
+                evt.preventDefault();
+                var $form = $(this);
+                var $button = $form.find('[type="submit"]');
+                var $messages = $('#settings-messages');
+                
+                var editorTheme = $form.find('#settings_editor_theme').val();
+                var fontSize = parseInt($form.find('#settings_font_size').val(), 10);
+                
+                var settingsUrl = flaskcode.config.get('settingsUrl') || '/settings';
+                
+                $.ajax({
+                    type: 'POST',
+                    url: settingsUrl,
+                    data: {
+                        editor_theme: editorTheme,
+                        font_size: fontSize
+                    },
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    beforeSend: function (xhr, settings) {
+                        $button.button('loading');
+                        $messages.empty();
+                    },
+                    complete: function (xhr, status) {
+                        $button.button('reset');
+                    },
+                }).done(function (data, status, xhr) {
+                    if (data.success) {
+                        // Show success message
+                        $messages.empty().append(
+                            $('<div class="alert alert-success alert-dismissible" role="alert">' +
+                              '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                              '<span aria-hidden="true">&times;</span></button>' +
+                              '<strong>' + data.message + '</strong>' +
+                              '</div>')
+                        );
+                        
+                        // Update editor settings
+                        flaskcode.config.set('editorTheme', data.theme);
+                        flaskcode.config.set('fontSize', data.font_size);
+                        
+                        // Apply settings to editor if it exists
+                        if (typeof flaskcode.updateEditorSettings === 'function') {
+                            flaskcode.updateEditorSettings();
+                        }
+                        
+                        // Close modal after a short delay
+                        setTimeout(function() {
+                            $('#settingsModal').modal('hide');
+                            // Reload page to ensure all settings are applied
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        // Show error message
+                        var errorMsg = data.message || 'Error saving settings.';
+                        if (data.errors && data.errors.length) {
+                            errorMsg = data.errors.join('<br>');
+                        }
+                        $messages.empty().append(
+                            $('<div class="alert alert-danger alert-dismissible" role="alert">' +
+                              '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                              '<span aria-hidden="true">&times;</span></button>' +
+                              '<strong>' + errorMsg + '</strong>' +
+                              '</div>')
+                        );
+                    }
+                }).fail(function (xhr, status, err) {
+                    var errorMsg = 'Error saving settings.';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMsg = xhr.responseJSON.message;
+                    }
+                    $messages.empty().append(
+                        $('<div class="alert alert-danger alert-dismissible" role="alert">' +
+                          '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                          '<span aria-hidden="true">&times;</span></button>' +
+                          '<strong>' + errorMsg + '</strong>' +
+                          '</div>')
+                    );
+                });
+                return false;
+            });
 
             $('form#fileNameForm').on('submit', function (evt) {
             evt.preventDefault();
